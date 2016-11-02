@@ -1,14 +1,14 @@
 import stream = require("stream");
 import { expect } from "chai";
 import { Lexer } from "../lexer";
-import { AnsiEscapeCodeParser } from "../parser";
+import { AnsiEscapeParser } from "../parser";
 
 describe("Lexer", () => {
 
     describe("constructor", () => {
         it("should construct", () => {
-            let parser = new AnsiEscapeCodeParser();
-            expect(parser).to.be.instanceOf(AnsiEscapeCodeParser);
+            let parser = new AnsiEscapeParser();
+            expect(parser).to.be.instanceOf(AnsiEscapeParser);
             expect(parser).to.be.instanceOf(stream.Stream);
             expect(parser).to.be.instanceOf(stream.Transform);
         });
@@ -18,7 +18,7 @@ describe("Lexer", () => {
         it("should be able to parse escape codes", (done) => {
             let chunks = new Array();
             let lexer = new Lexer();
-            let parser = new AnsiEscapeCodeParser();
+            let parser = new AnsiEscapeParser();
 
             lexer.pipe(parser);
             lexer.write("cal\x1b[01;31m\x1b[Kzone\x1b[m\x1b[Ks");

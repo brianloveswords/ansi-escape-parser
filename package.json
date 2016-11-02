@@ -13,7 +13,7 @@
     "mocha": "^3.1.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha dist/tests",
     "build": "tsc",
     "clean": "rm -rf dist/*",
     "watch": "npm run clean && tsc --watch",

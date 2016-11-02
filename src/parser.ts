@@ -1,6 +1,6 @@
 import stream = require("stream");
 import { Token } from "./lexer";
-export class AnsiEscapeCodeParser extends stream.Transform {
+export class AnsiEscapeParser extends stream.Transform {
     public state: "text" | "escape";
     public buffer: String;
 
@@ -14,7 +14,7 @@ export class AnsiEscapeCodeParser extends stream.Transform {
         encoding;
 
         if (this.state === "escape") {
-            return this.parseAnsiCode(token, callback);
+            return this.parseAnsiEscape(token, callback);
         }
 
         if (this.state === "text") {
@@ -23,7 +23,7 @@ export class AnsiEscapeCodeParser extends stream.Transform {
 
     }
 
-    parseAnsiCode(token: Token, callback: Function) {
+    parseAnsiEscape(token: Token, callback: Function) {
         this.buffer += token.content;
         if (token.type === "letter") {
             this.state = "text";
