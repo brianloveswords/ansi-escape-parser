@@ -13,13 +13,12 @@ describe("Lexer", () => {
     });
 
     describe("write()", () => {
-        let lexer = new Lexer();
-        it("should emit a number after writing a number", (done) => {
-            lexer.end("123");
-
+        it("should emit numbers", (done) => {
             let events = new Array();
+            let lexer = new Lexer();
+            let input = "123";
+            lexer.end(input);
             lexer.on("data", (event) => events.push(event));
-
             lexer.on("end", () => {
                 expect(events).to.eql([
                     {type: "number", content: "1"},
@@ -28,7 +27,46 @@ describe("Lexer", () => {
                 ]);
                 done();
             });
+        });
 
+        it("should emit letters", (done) => {
+            let events = new Array();
+            let lexer = new Lexer();
+            let input = new Buffer("abc");
+            lexer.end(input);
+            lexer.on("data", (event) => events.push(event));
+            lexer.on("end", () => {
+                expect(events).to.eql([
+                    {type: "letter", content: "a"},
+                    {type: "letter", content: "b"},
+                    {type: "letter", content: "c"},
+                ]);
+                done();
+            });
+        });
+
+        it("altogether now", (done) => {
+            let events = new Array();
+            let lexer = new Lexer();
+            let input = new Buffer("\x1b[01;31mlol");
+            lexer.end(input);
+            lexer.on("data", (event) => events.push(event));
+            lexer.on("end", () => {
+                expect(events).to.eql([
+                    {type: "escape", content: "\x1b"},
+                    {type: "lbrace", content: "["},
+                    {type: "number", content: "0"},
+                    {type: "number", content: "1"},
+                    {type: "semicolon", content: ";"},
+                    {type: "number", content: "3"},
+                    {type: "number", content: "1"},
+                    {type: "letter", content: "m"},
+                    {type: "letter", content: "l"},
+                    {type: "letter", content: "o"},
+                    {type: "letter", content: "l"},
+                ]);
+                done();
+            });
         });
     });
 });
