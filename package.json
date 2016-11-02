@@ -1,0 +1,25 @@
+{
+  "name": "ansi-code-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.32",
+    "@types/node": "^6.0.46",
+    "chai": "^3.5.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "clean": "rm -rf dist/*",
+    "watch": "npm run clean && tsc --watch",
+    "go": "npm build && node dist/index"
+  },
+  "keywords": [],
+  "author": "Brian J Brennan",
+  "license": "GPL 3.0"
+}
