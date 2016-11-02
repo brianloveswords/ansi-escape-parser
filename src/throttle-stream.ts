@@ -2,10 +2,12 @@ import stream = require("stream");
 
 export class ThrottleStream extends stream.Transform {
     public readonly delayIncrement: number;
+    public readonly predicate: Function;
     private nextEvent: number;
 
-    constructor(ms: number) {
+    constructor(ms: number, predicate?: Function) {
         super({objectMode: true});
+        this.predicate = predicate || (() => true);
         this.delayIncrement = ms;
         this.nextEvent = 0;
     }
@@ -19,6 +21,11 @@ export class ThrottleStream extends stream.Transform {
 
     _transform(chunk: any, encoding: string, cb: Function) {
         encoding;
+
+        if (!this.predicate(chunk)) {
+            this.push(chunk);
+            return cb();
+        }
 
         const now = Date.now();
         const currentNextEvent = Math.max(now, this.nextEvent);

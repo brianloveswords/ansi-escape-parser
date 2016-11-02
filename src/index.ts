@@ -9,6 +9,6 @@ const stdout = process.stdout;
 stdin
     .pipe(new Lexer())
     .pipe(new AnsiEscapeParser())
-    .pipe(new ThrottleStream(250))
+    .pipe(new ThrottleStream(250, (chunk) => chunk.type !== "escape-code"))
     .pipe(new MapStream((chunk) => chunk.content))
     .pipe(stdout);
