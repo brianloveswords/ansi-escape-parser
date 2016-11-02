@@ -12,7 +12,7 @@ export interface Token {
     content: string;
 }
 
-export class Lexer extends stream.Transform {
+export class AnsiEscapeLexer extends stream.Transform {
     constructor() {
         super({objectMode: true});
     }

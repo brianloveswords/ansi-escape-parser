@@ -1,6 +1,6 @@
 import stream = require("stream");
 import { expect } from "chai";
-import { Lexer } from "../lexer";
+import { AnsiEscapeLexer } from "../lexer";
 import { AnsiEscapeParser } from "../parser";
 
 describe("Lexer", () => {
@@ -17,7 +17,7 @@ describe("Lexer", () => {
     describe("write()", () => {
         it("should be able to parse escape codes", (done) => {
             let chunks = new Array();
-            let lexer = new Lexer();
+            let lexer = new AnsiEscapeLexer();
             let parser = new AnsiEscapeParser();
 
             lexer.pipe(parser);

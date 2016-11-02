@@ -1,12 +1,12 @@
 import stream = require("stream");
 import { expect } from "chai";
-import { Lexer } from "../lexer";
+import { AnsiEscapeLexer } from "../lexer";
 
 describe("Lexer", () => {
     describe("constructor", () => {
         it("should construct", () => {
-            let lexer = new Lexer();
-            expect(lexer).to.be.instanceOf(Lexer);
+            let lexer = new AnsiEscapeLexer();
+            expect(lexer).to.be.instanceOf(AnsiEscapeLexer);
             expect(lexer).to.be.instanceOf(stream.Stream);
             expect(lexer).to.be.instanceOf(stream.Transform);
         });
@@ -15,7 +15,7 @@ describe("Lexer", () => {
     describe("write()", () => {
         it("should emit numbers", (done) => {
             let events = new Array();
-            let lexer = new Lexer();
+            let lexer = new AnsiEscapeLexer();
             let input = "123";
             lexer.end(input);
             lexer.on("data", (event) => events.push(event));
@@ -31,7 +31,7 @@ describe("Lexer", () => {
 
         it("should emit letters", (done) => {
             let events = new Array();
-            let lexer = new Lexer();
+            let lexer = new AnsiEscapeLexer();
             let input = new Buffer("abc");
             lexer.end(input);
             lexer.on("data", (event) => events.push(event));
@@ -47,7 +47,7 @@ describe("Lexer", () => {
 
         it("altogether now", (done) => {
             let events = new Array();
-            let lexer = new Lexer();
+            let lexer = new AnsiEscapeLexer();
             let input = new Buffer("\x1b[01;31mlol");
             lexer.end(input);
             lexer.on("data", (event) => events.push(event));
