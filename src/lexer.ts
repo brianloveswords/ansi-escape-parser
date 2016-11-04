@@ -23,10 +23,7 @@ export class AnsiEscapeLexer extends stream.Transform {
         this.buffer = "";
     }
 
-    _transform(chunk: string | Buffer, encoding: string, callback: Function) {
-        // We don't use encoding but this makes the typechecker happy.
-        encoding;
-
+    _transform(chunk: string | Buffer, _: string, callback: Function) {
         if (Buffer.isBuffer(chunk)) {
             chunk = chunk.toString();
         }

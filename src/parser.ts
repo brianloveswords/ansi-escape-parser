@@ -6,9 +6,7 @@ export class AnsiEscapeParser extends stream.Transform {
         super({objectMode: true});
     }
 
-    _transform(token: Token, encoding: string, callback: Function) {
-        encoding;
-
+    _transform(token: Token, _: string, callback: Function) {
         if (token.type !== "escape-code") {
             this.push(token);
             return callback();
