@@ -10,12 +10,6 @@ describe("ThrottleStream", () => {
             expect(throttle).to.be.instanceOf(stream.Stream);
             expect(throttle).to.be.instanceOf(stream.Transform);
         });
-        it("should construct", () => {
-            let throttle = new ThrottleStream(100);
-            expect(throttle).to.be.instanceOf(ThrottleStream);
-            expect(throttle).to.be.instanceOf(stream.Stream);
-            expect(throttle).to.be.instanceOf(stream.Transform);
-        });
     });
 
     describe("write()", () => {
@@ -45,16 +39,34 @@ describe("ThrottleStream", () => {
             throttle.on("end", () => {
                 let end = Date.now();
                 let time = end - start;
-                console.log(end);
-                console.log(time);
                 let expected = delay * characters.length;
                 expect(buffer).to.equal(characters);
                 expect(time)
                     .to.be.gte(expected)
                     .and.be.lte(expected + 10);
-                console.log(`end called at ${end}`);
                 done();
             });
+        });
+    });
+    describe("write(), with conditions", () => {
+        it("should only delay if the condition matches", (done) => {
+            let throttle = new ThrottleStream(100, n => n > 3);
+            throttle.on("end", () => {
+                let expected = 100;
+                let end = Date.now();
+                let time = end - start;
+                expect(time).to.be.gte(expected);
+                done();
+            });
+
+            throttle.on("data", (_) => {});
+
+            let start = Date.now();
+            throttle.write(1);
+            throttle.write(2);
+            throttle.write(3);
+            throttle.write(4);
+            throttle.end();
         });
     });
 
