@@ -13,8 +13,13 @@ export interface Token {
 }
 
 export class AnsiEscapeLexer extends stream.Transform {
+    public state: "text" | "escape";
+    public buffer: String;
+
     constructor() {
         super({objectMode: true});
+        this.state = "text";
+        this.buffer = "";
     }
 
     _transform(chunk: string | Buffer, encoding: string, callback: Function) {
@@ -26,29 +31,36 @@ export class AnsiEscapeLexer extends stream.Transform {
         }
 
         for (let chr of chunk) {
-            let event: Token = {type: "unknown", content: chr};
+            let token: Token = {type: "unknown", content: chr};
 
-            if (isNumber(chr)) {
-                event.type =  "number";
+            if (isNumber(chr)) { token.type =  "number"; }
+
+            else if (isLetter(chr)) { token.type = "letter"; }
+
+            else if (isSemicolon(chr)) { token.type = "semicolon"; }
+
+            else if (isLeftBrace(chr)) { token.type = "lbrace"; }
+
+            else if (isEscape(chr)) { token.type = "escape"; }
+
+            if (this.state === "escape") {
+                this.buffer += token.content;
+                if (token.type === "letter") {
+                    this.state = "text";
+                    this.push({ type: "escape-code", content: this.buffer });
+                }
             }
 
-            else if (isLetter(chr)) {
-                event.type = "letter";
-            }
+            else if (this.state === "text") {
+                if (token.type === "escape") {
+                    this.state = "escape";
+                    this.buffer = token.content;
+                }
 
-            else if (isSemicolon(chr)) {
-                event.type = "semicolon";
+                else {
+                    this.push(token);
+                }
             }
-
-            else if (isLeftBrace(chr)) {
-                event.type = "lbrace";
-            }
-
-            else if (isEscape(chr)) {
-                event.type = "escape";
-            }
-
-            this.push(event);
         }
 
         return callback();
