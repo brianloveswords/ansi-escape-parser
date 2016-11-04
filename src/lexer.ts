@@ -8,7 +8,8 @@ import {
 } from "./character-predicates";
 
 export interface Token {
-    type: "number" | "letter" | "semicolon" | "lbrace" | "escape" | "unknown";
+    type: "number" | "letter" | "semicolon" | "lbrace" |
+        "escape" | "escape-code" | "unknown";
     content: string;
 }
 
